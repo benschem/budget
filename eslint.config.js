@@ -1,48 +1,53 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import importPlugin from 'eslint-plugin-import';
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
-import prettierPlugin from 'eslint-plugin-prettier';
-import typescriptParser from '@typescript-eslint/parser';
-
-const compat = new FlatCompat({
-  baseDirectory: process.cwd(),
-});
-
-export default [
-  ...compat.extends('airbnb'),
-
-  {
-    files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    languageOptions: {
-      parser: typescriptParser,
-      parserOptions: {
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es2021: true,
+  },
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: './tsconfig.json',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'import', 'jsx-a11y', 'prettier'],
+  extends: [
+    'airbnb',
+    'airbnb/hooks',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended',
+  ],
+  settings: {
+    react: { version: 'detect' },
+    'import/resolver': {
+      typescript: {
         project: './tsconfig.json',
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        ecmaFeatures: { jsx: true },
       },
     },
-    plugins: {
-      '@typescript-eslint': typescriptPlugin,
-      react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
-      import: importPlugin,
-      'jsx-a11y': jsxA11yPlugin,
-      prettier: prettierPlugin,
-    },
-    rules: {
-      'react/react-in-jsx-scope': 'off', // Suppress 'React must be in scope errors when using React 17+
-      'react/jsx-uses-react': 'off', // Suppress 'React must be in scope errors when using React 17+
-      'prettier/prettier': 'error', // Formatting issues become ESLint errors
-      // Add any custom rules here
-    },
-    settings: {
-      react: { version: 'detect' },
-      'import/resolver': { typescript: {} },
-    },
-    ignores: ['node_modules', 'dist'],
   },
-];
+  rules: {
+    // React 17+ JSX rules
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-uses-react': 'off',
+
+    // Prettier integration
+    'prettier/prettier': 'error',
+
+    // Allow JSX in .tsx and .jsx files
+    'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
+
+    // TS and import fixes
+    'import/no-unresolved': 'off',
+    'import/extensions': 'off',
+    'no-console': 'off',
+
+    // Custom rules
+    'react/jsx-one-expression-per-line': 'off',
+  },
+  ignorePatterns: ['node_modules', 'dist'],
+};
