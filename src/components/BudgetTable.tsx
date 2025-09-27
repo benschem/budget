@@ -18,7 +18,10 @@ export default function BudgetTable({ categories }: Props) {
       </thead>
       <tbody>
         {categories.map((category) => {
-          const ytd = Object.values(category.monthlySpends).reduce((sum, val) => sum + val, 0);
+          const ytd = Object.values(category.monthlySpends ?? {}).reduce(
+            (sum, val) => sum + (val ?? 0),
+            0,
+          );
           const monthlyBudget = (category.annualBudget / 12).toFixed(2);
           return (
             <tr key={category.id}>

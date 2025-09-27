@@ -34,7 +34,7 @@ export default function App() {
         if (!entriesForCategory) return category;
 
         const updatedMonthlySpends: Record<string, number> = {
-          ...category.monthlySpends,
+          ...(category.monthlySpends ?? {}),
         };
         entriesForCategory.forEach((entry) => {
           updatedMonthlySpends[entry.month] = entry.amount;
