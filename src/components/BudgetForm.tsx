@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { FormEvent } from 'react';
 
 type Props = {
   onAdd: (name: string, annualBudget: number) => void;
@@ -6,24 +7,29 @@ type Props = {
 
 export default function BudgetForm({ onAdd }: Props) {
   const [name, setName] = useState('');
-  const [budget, setBudget] = useState<number>(0);
+  const [annualBudget, setAnnualBudget] = useState<number>(0);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || budget <= 0) return;
-    onAdd(name, budget);
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!name || annualBudget <= 0) return;
+    onAdd(name, annualBudget);
     setName('');
-    setBudget(0);
+    setAnnualBudget(0);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input placeholder="Category name" value={name} onChange={(e) => setName(e.target.value)} />
+      <input
+        id="categoryName"
+        placeholder="Category name"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+      />
       <input
         type="number"
         placeholder="Annual budget"
-        value={budget}
-        onChange={(e) => setBudget(Number(e.target.value))}
+        value={annualBudget}
+        onChange={(event) => setAnnualBudget(Number(event.target.value))}
       />
       <button type="submit">Add</button>
     </form>

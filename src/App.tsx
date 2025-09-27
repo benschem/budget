@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import type { BudgetData, Category } from './types';
+import type { BudgetData, Category, SpendingEntry } from './types';
 import useLocalStorage from './hooks/useLocalStorage';
 import BudgetForm from './components/BudgetForm';
 import CheckInForm from './components/CheckInForm';
@@ -17,28 +16,44 @@ export default function App() {
       id: crypto.randomUUID(),
       name,
       annualBudget,
-      actuals: {},
+      monthlySpends: {},
     };
     setData({ categories: [...data.categories, newCategory] });
   };
 
-  const addActual = (categoryId: string, month: string, amount: number) => {
-    setData({
-      categories: data.categories.map((cat) =>
-        cat.id === categoryId ? { ...cat, actuals: { ...cat.actuals, [month]: amount } } : cat,
-      ),
+  const addSpending = (spendingEntries: SpendingEntry[]) => {
+    const entriesByCategory: Record<string, SpendingEntry[]> = {};
+    spendingEntries.forEach((entry) => {
+      entriesByCategory[entry.categoryId] = entriesByCategory[entry.categoryId] ?? [];
+      entriesByCategory[entry.categoryId].push(entry);
     });
+
+    setData((previous) => ({
+      categories: previous.categories.map((category) => {
+        const entriesForCategory = entriesByCategory[category.id];
+        if (!entriesForCategory) return category;
+
+        const updatedMonthlySpends: Record<string, number> = {
+          ...category.monthlySpends,
+        };
+        entriesForCategory.forEach((entry) => {
+          updatedMonthlySpends[entry.month] = entry.amount;
+        });
+
+        return { ...category, monthlySpends: updatedMonthlySpends };
+      }),
+    }));
   };
 
   return (
     <div style={{ padding: '1rem', fontFamily: 'sans-serif' }}>
-      <h1>Budget App MVP</h1>
+      <h1>Budget</h1>
 
       <h2>Add Category</h2>
       <BudgetForm onAdd={addCategory} />
 
       <h2>Log Monthly Spending</h2>
-      <CheckInForm categories={data.categories} onAddActual={addActual} />
+      <CheckInForm categories={data.categories} onAdd={addSpending} />
 
       <h2>Overview</h2>
       <BudgetTable categories={data.categories} />
