@@ -1,23 +1,43 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import { FlatCompat } from '@eslint/eslintrc'
+import typescriptPlugin from '@typescript-eslint/eslint-plugin'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import importPlugin from 'eslint-plugin-import'
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
 
-export default defineConfig([
-  globalIgnores(['dist']),
+const compat = new FlatCompat({
+  baseDirectory: process.cwd(),
+})
+
+export default [
+  ...compat.extends('airbnb'),
+
   {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
+    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parser: '@typescript-eslint/parser',
+      parserOptions: {
+        project: './tsconfig.app.json',
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+      },
+    },
+    plugins: {
+      '@typescript-eslint': typescriptPlugin,
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
+      import: importPlugin,
+      'jsx-a11y': jsxA11yPlugin,
+    },
+    rules: {
+      'react/react-in-jsx-scope': 'off', // Suppress 'React must be in scope errors when using React 17+
+      'react/jsx-uses-react': 'off', // Suppress 'React must be in scope errors when using React 17+
+      // Add any custom rules here
+    },
+    settings: {
+      react: { version: 'detect' },
+      'import/resolver': { typescript: {} },
     },
   },
-])
+]
