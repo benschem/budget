@@ -5,6 +5,7 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import importPlugin from 'eslint-plugin-import';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import prettierPlugin from 'eslint-plugin-prettier';
+import typescriptParser from '@typescript-eslint/parser';
 
 const compat = new FlatCompat({
   baseDirectory: process.cwd(),
@@ -14,11 +15,11 @@ export default [
   ...compat.extends('airbnb'),
 
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
+    files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     languageOptions: {
-      parser: '@typescript-eslint/parser',
+      parser: typescriptParser,
       parserOptions: {
-        project: './tsconfig.app.json',
+        project: './tsconfig.json',
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: { jsx: true },
@@ -42,5 +43,6 @@ export default [
       react: { version: 'detect' },
       'import/resolver': { typescript: {} },
     },
+    ignores: ['node_modules', 'dist'],
   },
 ];
