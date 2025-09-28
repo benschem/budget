@@ -1,0 +1,57 @@
+{
+  "startingBalance": 7500,
+  "incomes": [
+    { "id": 1, "amount": 4000, "date": "2025-09-01", "source": "Salary" },
+    { "id": 2, "amount": 4000, "date": "2025-10-01", "source": "Salary" },
+    { "id": 3, "amount": 4000, "date": "2025-11-01", "source": "Salary" },
+    { "id": 4, "amount": 4000, "date": "2025-12-01", "source": "Salary" }
+  ],
+  "expenses": [
+    { "id": 1, "amount": 1200, "date": "2025-09-03", "categoryId": 1, "notes": "Rent" },
+    { "id": 2, "amount": 380, "date": "2025-09-10", "categoryId": 2, "notes": "Groceries" },
+    { "id": 3, "amount": 150, "date": "2025-09-15", "categoryId": 3, "notes": "Concert" },
+    { "id": 4, "amount": 1200, "date": "2025-10-03", "categoryId": 1 },
+    { "id": 5, "amount": 420, "date": "2025-10-11", "categoryId": 2 },
+    { "id": 6, "amount": 80, "date": "2025-10-20", "categoryId": 4, "notes": "Fuel" },
+    { "id": 7, "amount": 1200, "date": "2025-11-03", "categoryId": 1 },
+    { "id": 8, "amount": 390, "date": "2025-11-09", "categoryId": 2 },
+    { "id": 9, "amount": 250, "date": "2025-11-14", "categoryId": 3, "notes": "Comedy show" }
+  ],
+  "projectedIncomes": [
+    { "id": 5, "amount": 4000, "date": "2026-01-01", "source": "Salary" },
+    { "id": 6, "amount": 4000, "date": "2026-02-01", "source": "Salary" },
+    { "id": 7, "amount": 4000, "date": "2026-03-01", "source": "Salary" },
+    { "id": 8, "amount": 4000, "date": "2026-04-01", "source": "Salary" },
+    { "id": 9, "amount": 4000, "date": "2026-05-01", "source": "Salary" },
+    { "id": 10, "amount": 4000, "date": "2026-06-01", "source": "Salary" }
+  ],
+  "budgetedExpenses": [
+    { "id": 1, "amount": 1200, "date": "2025-09-01", "categoryId": 1, "notes": "Rent" },
+    { "id": 2, "amount": 400, "date": "2025-09-01", "categoryId": 2, "notes": "Groceries" },
+    { "id": 3, "amount": 100, "date": "2025-09-01", "categoryId": 4, "notes": "Transport" },
+    { "id": 4, "amount": 150, "date": "2025-09-01", "categoryId": 3, "notes": "Entertainment" },
+
+    { "id": 5, "amount": 1200, "date": "2025-10-01", "categoryId": 1 },
+    { "id": 6, "amount": 400, "date": "2025-10-01", "categoryId": 2 },
+    { "id": 7, "amount": 100, "date": "2025-10-01", "categoryId": 4 },
+    { "id": 8, "amount": 150, "date": "2025-10-01", "categoryId": 3 },
+
+    { "id": 9, "amount": 1200, "date": "2025-11-01", "categoryId": 1 },
+    { "id": 10, "amount": 400, "date": "2025-11-01", "categoryId": 2 },
+    { "id": 11, "amount": 100, "date": "2025-11-01", "categoryId": 4 },
+    { "id": 12, "amount": 150, "date": "2025-11-01", "categoryId": 3 },
+
+    { "id": 13, "amount": 600, "date": "2025-09-01", "categoryId": 5, "notes": "Savings" },
+    { "id": 14, "amount": 600, "date": "2025-10-01", "categoryId": 5, "notes": "Savings" },
+    { "id": 15, "amount": 600, "date": "2025-11-01", "categoryId": 5, "notes": "Savings" },
+    { "id": 15, "amount": 600, "date": "2025-12-01", "categoryId": 5, "notes": "Savings" },
+    { "id": 15, "amount": 600, "date": "2026-01-01", "categoryId": 5, "notes": "Savings" }
+  ],
+  "categories": [
+    { "id": 1, "name": "Housing" },
+    { "id": 2, "name": "Groceries" },
+    { "id": 3, "name": "Entertainment" },
+    { "id": 4, "name": "Transport" },
+    { "id": 5, "name": "Savings" }
+  ]
+}
