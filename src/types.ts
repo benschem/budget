@@ -10,7 +10,7 @@ export interface Expense {
   id: number;
   amount: number;
   date: string; // ISO date string
-  category_id: number;
+  categoryId: number;
   notes?: string;
 }
 
@@ -20,16 +20,16 @@ export interface ProjectedIncome {
   date: string; // ISO date string
   source: string;
   notes?: string;
-  recurrence: 'once' | 'weekly' | 'fortnightly' | 'monthly' | 'annually'
+  recurrence_group_id?: number;
 }
 
-export interface ProjectedExpense {
+export interface BudgetedExpense {
   id: number;
   amount: number;
-  expected_date: string; // ISO date string
-  category_id: number;
+  date: string; // ISO date string
+  categoryId: number;
   notes?: string;
-  recurrence: 'once' | 'weekly' | 'fortnightly' | 'monthly' | 'annually'
+  recurrence_group_id?: number;
 }
 
 export interface Category {
@@ -37,18 +37,11 @@ export interface Category {
   name: string;
 }
 
-export interface Money {
-  id: number;
-  amount: number;
-  category_id?: number; // if undefined = "free money"
-}
-
 export interface BudgetData {
-  starting_balance: number; // the amount already in the bank at the time you start tracking
-  income: Income[];
+  startingBalance: number; // the amount already in the bank at the time you start tracking
+  incomes: Income[];
   expenses: Expense[];
-  projected_income: ProjectedIncome[];
-  projected_expenses: ProjectedExpense[];
+  projectedIncomes: ProjectedIncome[];
+  budgetedExpenses: BudgetedExpense[];
   categories: Category[];
-  money: Money[];
 }
