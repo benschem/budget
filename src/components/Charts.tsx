@@ -11,6 +11,7 @@ import {
   Label,
 } from 'recharts';
 import type { Category } from '../types';
+import BudgetLineChart from './BudgetLineChart';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088fe'];
 
@@ -73,8 +74,8 @@ export default function Charts({ categories }: Props) {
           outerRadius={80}
           label={({ name, value }) => `${name}: $${(value as number).toLocaleString()}`}
         >
-          {pieData.map((category) => (
-            <Cell key={category.id} fill={colorMap[category.id]} />
+          {pieData.map((categry) => (
+            <Cell key={categry.id} fill={colorMap[categry.id]} />
           ))}
           <Label
             value={`$${total.toLocaleString()}`}
@@ -126,6 +127,7 @@ export default function Charts({ categories }: Props) {
           />
         </Bar>
       </BarChart>
+      <BudgetLineChart categories={categories} />
     </div>
   );
 }
