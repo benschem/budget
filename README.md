@@ -1,73 +1,44 @@
-# React + TypeScript + Vite
+# Budgeting tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal budgeting tool that runs entirely in the browser.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Track income and expenses
+- Define categories (e.g. groceries, rent, entertainment, savings)
+- Project expenses per category
+- Compare actual spending to projected spending per category
+- Check how much money is free to spend
+- Estimate whether future obligations can be covered
+- Simulate budget adjustments (e.g. "What happens if I reduce dining out by $100 per month?").
 
-## React Compiler
+## Tech stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- NPM
+- React
+- TypeScript
+- Vite
+- Recharts
+- ESLint
+- Prettier
 
-## Expanding the ESLint configuration
+Budget data is stored locally on device - no database.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Setup instructions
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```zsh
+npm install
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Command line
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```zsh
+npm run dev # start a dev server with vite
+npm run build # build with vite
+npm run preview # serve the latest build
+npm run lint # see linting issues with eslint
+npm run lint:fix # fix linting issues with eslint
+npm run format # see formatting issues with prettier
+npm run format:fix # fix formatting issues with prettier
 ```
