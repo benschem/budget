@@ -1,4 +1,3 @@
-import fetchJson from '../utils/fetchJson';
 import type {
   BudgetData,
   Category,
@@ -6,11 +5,7 @@ import type {
   Expense,
   ProjectedIncome,
   BudgetedExpense,
-} from '../types';
-
-export async function loadBudgetData(path: string): Promise<BudgetData> {
-  return fetchJson<BudgetData>(path);
-}
+} from '../../types';
 
 export function calculateTotalSpent(expenses: Expense[]) {
   const total = expenses.reduce((acc: number, expense: Expense) => acc + expense.amount, 0);
@@ -22,7 +17,9 @@ export function calculateTotalIncomeReceived(incomes: Income[]) {
   return total;
 }
 
-export function calculateBalance(data: BudgetData) {
+export function calculateCurrentBalance(data: BudgetData | null) {
+  if (data == null) return 0;
+
   const totalSpent = calculateTotalSpent(data.expenses);
   const totalReceived = calculateTotalIncomeReceived(data.incomes);
   const balance = data.startingBalance - totalSpent + totalReceived;
@@ -57,15 +54,19 @@ export function calculateBudgetedExpenses(budgetedExpenses: BudgetedExpense[]) {
   return total;
 }
 
-export function calculateAvailableToSpend(data: BudgetData) {
-  const current = calculateBalance(data);
+export function calculateAvailableToSpend(data: BudgetData | null) {
+  if (data == null) return 0;
+
+  const current = calculateCurrentBalance(data);
   const comingIn = calculateProjectedIncome(data.projectedIncomes);
   const goingOut = calculateBudgetedExpenses(data.budgetedExpenses);
   const available = current + comingIn - goingOut;
   return available;
 }
 
-export function calculateTotalSpendPerCategory(data: BudgetData, category: Category) {
+export function calculateTotalSpendPerCategory(data: BudgetData | null, category: Category) {
+  if (data == null) return 0;
+
   let total = 0;
   data.expenses.forEach((expense) => {
     if (expense.categoryId === category.id) {
@@ -75,7 +76,12 @@ export function calculateTotalSpendPerCategory(data: BudgetData, category: Categ
   return total;
 }
 
-export function calculatePastProjectedSpendPerCategory(data: BudgetData, category: Category) {
+export function calculateTotalPastBudgetedExpensesPerCategory(
+  data: BudgetData | null,
+  category: Category,
+) {
+  if (data == null) return 0;
+
   let total = 0;
   data.budgetedExpenses.forEach((budgetedExpense) => {
     const today = new Date();
@@ -88,10 +94,12 @@ export function calculatePastProjectedSpendPerCategory(data: BudgetData, categor
   return total;
 }
 
-export function calculateFutureProjectedSpendPerCategoryPerMonth(
-  data: BudgetData,
+export function calculateFutureSpendPerCategoryPerMonth(
+  data: BudgetData | null,
   category: Category,
 ) {
+  if (data == null) return 0;
+
   let total = 0;
   data.budgetedExpenses.forEach((budgetedExpense) => {
     const today = new Date();
@@ -100,12 +108,24 @@ export function calculateFutureProjectedSpendPerCategoryPerMonth(
     const expectedDate = new Date(budgetedExpense.date);
     if (
       budgetedExpense.categoryId === category.id &&
-      expectedDate > today &&
-      expectedDate < endOfFinancialYear
+      expectedDate.getTime() > today.getTime() &&
+      expectedDate.getTime() < endOfFinancialYear.getTime()
     ) {
       total += budgetedExpense.amount;
     }
   });
   const monthsBetweenNowAndEndOfFinancialYear = 9;
   return total / monthsBetweenNowAndEndOfFinancialYear;
+}
+
+export function calculateBudgetStatus(spent: number, budgeted: number) {
+  let status;
+  if (spent > budgeted) {
+    status = 'Over';
+  } else if (spent === budgeted) {
+    status = 'On';
+  } else {
+    status = 'Under';
+  }
+  return status;
 }

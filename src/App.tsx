@@ -1,89 +1,39 @@
-import {
-  loadBudgetData,
-  calculateBalance,
-  calculateProjectedIncome,
-  calculateBudgetedExpenses,
-  calculateAvailableToSpend,
-  calculateTotalSpendPerCategory,
-  calculatePastProjectedSpendPerCategory,
-  calculateFutureProjectedSpendPerCategoryPerMonth,
-} from './lib/budgetHelpers';
+import { createContext, useState } from 'react';
+import { loadBudgetFromLocalStorage, loadDummyData } from './lib/budget/repository';
+import SaveDataButton from './components/saveDataButton';
+import Overview from './components/overview';
+import CategoryCard from './components/categoryCard';
+import type { BudgetData, Category } from './types';
 
-const budgetData = await loadBudgetData('budgetData.json');
-const balance = calculateBalance(budgetData).toLocaleString('en', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-const projectedIncome = calculateProjectedIncome(budgetData.projectedIncomes).toLocaleString('en', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-const allocated = calculateBudgetedExpenses(budgetData.budgetedExpenses).toLocaleString('en', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-const unallocated = calculateAvailableToSpend(budgetData).toLocaleString('en', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-const weeksUntilEofy = 39;
-const weeklySpend = (calculateAvailableToSpend(budgetData) / weeksUntilEofy).toLocaleString('en', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
+export const BudgetContext = createContext<BudgetData | null>(null);
 
 export default function App() {
-  return (
-    <div>
-      <h1>Budget</h1>
-      <p>You currently should have ${balance} in the bank</p>
-      <h2>Until EOFY:</h2>
-      <ul>
-        <li>You should earn ${projectedIncome}</li>
-        <li>You have allocated ${allocated}</li>
-        <li>You have not allocated ${unallocated}</li>
-        <li>You could spend up to ${weeklySpend} per week</li>
-      </ul>
+  const [budgetData, setBudgetData] = useState<BudgetData | null>(() => loadBudgetFromLocalStorage('budgetData'),);
 
+  if (!budgetData) return <p>Loading...</p>;
+
+  return (
+    <BudgetContext.Provider value={budgetData}>
+      <h1>Budget</h1>
+      <button
+        type="button"
+        onClick={async () => {
+          const data = await loadDummyData();
+          if (data) {
+            setBudgetData(data);
+          }
+        }}
+      >
+        Load Dummy Data From File
+      </button>
+      <SaveDataButton />
+      <Overview />
       <h2>Categories</h2>
       <ul>
-        {budgetData.categories.map((category) => {
-          const pastProjectedSpend = calculatePastProjectedSpendPerCategory(budgetData, category);
-          const totalSpend = calculateTotalSpendPerCategory(budgetData, category);
-          const futureProjectedSpendPerMonth = calculateFutureProjectedSpendPerCategoryPerMonth(
-            budgetData,
-            category,
-          );
-
-          return (
-            <li key={category.id}>
-              <h3>{category.name}</h3>
-              <p>{totalSpend > pastProjectedSpend ? 'Over' : 'Under'} budget</p>
-              <p>
-                Spent $
-                {totalSpend.toLocaleString('en', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}{' '}
-                out of $
-                {pastProjectedSpend.toLocaleString('en', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}{' '}
-                so far
-              </p>
-              <p>
-                Budgeted $
-                {futureProjectedSpendPerMonth.toLocaleString('en', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}{' '}
-                per month until EOFY
-              </p>
-            </li>
-          );
-        })}
+        {budgetData.categories.map((category: Category) => (
+          <CategoryCard key={category.id} category={category} />
+        ))}
       </ul>
-    </div>
+    </BudgetContext.Provider>
   );
 }
