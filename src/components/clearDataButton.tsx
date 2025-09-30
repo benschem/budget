@@ -1,22 +1,22 @@
 import { useContext } from 'react';
 import { BudgetContext } from '../App';
-import { saveBudgetToLocalStorage } from '../lib/budget/repository';
 
-export default function SaveDataButton() {
+export default function ExportDataButton() {
   const budgetData = useContext(BudgetContext);
-  
+
   if (!budgetData) {
     throw new Error('SaveDataButton must be used within a BudgetContext.Provider');
   }
 
-  return (
+  return(
     <button
       type="button"
       onClick={() => {
-        saveBudgetToLocalStorage('budgetData', budgetData);
+        window.localStorage.removeItem('budgetData');
+        location.reload();
       }}
     >
-      Save Budget
+      Clear Data
     </button>
-  );
+  )
 }
