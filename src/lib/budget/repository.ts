@@ -22,7 +22,7 @@ export function saveBudgetToLocalStorage(key: string, data: BudgetData): void {
   }
 }
 
-export async function loadDummyData(): Promise<BudgetData> | null {
+export async function loadDummyData(): Promise<BudgetData | null> {
   try {
     const response = await fetch('/data.json'); // Path relative to the public/dist folder
     if (!response.ok) {
@@ -31,7 +31,7 @@ export async function loadDummyData(): Promise<BudgetData> | null {
     const jsonData = await response.json();
     return jsonData;
   } catch (error) {
-    console.error('Failed to parse budget from dummy file', err);
+    console.error('Failed to parse budget from dummy file', error);
     return null;
   }
 }

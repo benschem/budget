@@ -8,7 +8,7 @@ import type { BudgetData, Category } from './types';
 export const BudgetContext = createContext<BudgetData | null>(null);
 
 export default function App() {
-  const [budgetData, setBudgetData] = useState<BudgetData | null>(() => loadBudgetFromLocalStorage('budgetData'),);
+  const [budgetData, setBudgetData] = useState<BudgetData | null>(() => loadBudgetFromLocalStorage('budgetData'));
 
   if (!budgetData) return <p>Loading...</p>;
 
