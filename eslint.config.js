@@ -1,81 +1,53 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/no-unresolved */
-import { FlatCompat } from '@eslint/eslintrc';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import importPlugin from 'eslint-plugin-import';
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
-import prettierPlugin from 'eslint-plugin-prettier';
-import typescriptParser from '@typescript-eslint/parser';
-
-const compat = new FlatCompat({
-  baseDirectory: process.cwd(),
-});
+// eslint.config.js
+import js from '@eslint/js';
+import ts from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import prettier from 'eslint-config-prettier';
 
 export default [
-  ...compat.extends('airbnb'),
-
   {
-    files: ['src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    ignores: ['dist/**', 'node_modules/**'],
+  },
+  {
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      parser: typescriptParser,
-      parserOptions: {
-        project: './tsconfig.json',
-        tsconfigRootDir: process.cwd(),
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        ecmaFeatures: { jsx: true },
-      },
-      // Flat config does not allow `env`, so declare globals manually
+      parser: tsParser,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: {
+        browser: true,
         document: 'readonly',
         window: 'readonly',
-        navigator: 'readonly',
-        Node: 'readonly',
-        Blob: 'readonly',
-        FormData: 'readonly',
-        Request: 'readonly',
-        Response: 'readonly',
-        fetch: 'readonly',
-        Headers: 'readonly',
+        console: 'readonly',
+      },
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
       },
     },
     plugins: {
-      '@typescript-eslint': typescriptPlugin,
-      react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
-      import: importPlugin,
-      'jsx-a11y': jsxA11yPlugin,
-      prettier: prettierPlugin,
+      '@typescript-eslint': ts,
+      react,
+      'react-hooks': reactHooks,
+      'jsx-a11y': jsxA11y,
     },
     rules: {
-      // React 17+ JSX rules
-      'react/react-in-jsx-scope': 'off', // Suppress 'React must be in scope errors when using React 17+
-      'react/jsx-uses-react': 'off', // Suppress 'React must be in scope errors when using React 17+
-
-      // Prettier integration
-      'prettier/prettier': 'error', // Formatting issues become ESLint errors
-
-      // Allow JSX in .tsx and .jsx files
-      'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
-
-      // Typescript fixes
-      'import/no-unresolved': 'off', // workaround for TS paths
-      'import/extensions': 'off', // let TS handle extensions
-      'no-console': 'off', // Allow console.log etc
-
-      // Custom rules:
-      'react/jsx-one-expression-per-line': 'off',
+      ...js.configs.recommended.rules,
+      ...ts.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      ...jsxA11y.configs.recommended.rules,
+      ...prettier.rules,
+      'react/react-in-jsx-scope': 'off',
+      'comma-dangle': ['error', 'always-multiline'],
+      'no-undef': 'off',
     },
     settings: {
-      react: { version: 'detect' },
-      'import/resolver': {
-        typescript: {
-          project: './tsconfig.json',
-        },
+      react: {
+        version: 'detect',
       },
     },
-    ignores: ['node_modules', 'dist'],
   },
 ];
