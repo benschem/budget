@@ -32,11 +32,6 @@ export interface BudgetedExpense {
   recurrence_group_id?: number;
 }
 
-export interface Category {
-  id: number;
-  name: string;
-}
-
 export interface BudgetData {
   startingBalance: number; // the amount already in the bank at the time you start tracking
   incomes: Income[];

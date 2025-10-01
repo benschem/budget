@@ -3,9 +3,10 @@ import { loadBudgetFromLocalStorage, loadDummyData, saveBudgetToLocalStorage } f
 import SaveDataButton from './components/saveDataButton';
 import ExportDataButton from './components/exportDataButton';
 import ClearDataButton from './components/clearDataButton';
+import CategoryManager from './components/categoryManager';
 import Overview from './components/overview';
 import CategoryCard from './components/categoryCard';
-import type { BudgetData, Category } from './types';
+import type { BudgetData } from './types';
 
 export const BudgetContext = createContext<BudgetData | null>(null);
 
@@ -63,6 +64,7 @@ export default function App() {
       <ExportDataButton />
       <ClearDataButton />
       <Overview />
+      <CategoryManager />
       <h2>Categories</h2>
       <ul>
         {budgetData.categories.map((category: Category) => (
