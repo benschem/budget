@@ -1,42 +1,59 @@
-export interface Income {
-  id: number;
+export interface BankBalance {
   amount: number;
-  date: string; // ISO date string
-  source: string;
-  notes?: string;
 }
-
-export interface Expense {
-  id: number;
-  amount: number;
-  date: string; // ISO date string
-  categoryId: number;
-  notes?: string;
-}
-
-export interface ProjectedIncome {
-  id: number;
-  amount: number;
-  date: string; // ISO date string
-  source: string;
-  notes?: string;
-  recurrence_group_id?: number;
-}
-
-export interface BudgetedExpense {
-  id: number;
-  amount: number;
-  date: string; // ISO date string
-  categoryId: number;
-  notes?: string;
-  recurrence_group_id?: number;
-}
-
 export interface BudgetData {
-  startingBalance: number; // the amount already in the bank at the time you start tracking
+  bankBalance: BankBalance;
   incomes: Income[];
   expenses: Expense[];
   projectedIncomes: ProjectedIncome[];
   budgetedExpenses: BudgetedExpense[];
   categories: Category[];
+  savingsBuckets: SavingsBucket[];
+}
+
+export interface BudgetedExpense {
+  id: string; // crypto.randomUUID()
+  amount: number;
+  date: string; // ISO date string
+  categoryId: string;
+  notes?: string;
+  recurrence_group_id?: number;
+}
+
+export interface Category {
+  id: string; // crypto.randomUUID()
+  name: string;
+}
+
+export interface Expense {
+  id: string; // crypto.randomUUID()
+  amount: number;
+  date: string; // ISO date string
+  categoryId: string;
+  notes?: string;
+}
+
+export interface Income {
+  id: string; // crypto.randomUUID()
+  amount: number;
+  date: string; // ISO date string
+  source: string;
+  notes?: string;
+}
+
+export interface ProjectedIncome {
+  id: string; // crypto.randomUUID()
+  amount: number;
+  date: string; // ISO date string
+  source: string;
+  notes?: string;
+  recurrence_group_id?: string;
+}
+
+export interface SavingsBucket {
+  id: string; // crypto.randomUUID()
+  name: string;
+  amount: number;
+  goal: number;
+  categoryId?: string
 }

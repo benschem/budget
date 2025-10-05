@@ -1,28 +1,18 @@
-// useCategories.ts
-import { useState } from "react";
+import useLocalStorage from "./useLocalStorage";
+import type { Category } from "../types";
 
-export interface Category {
-  id: string;
-  name: string;
-}
-
-export function useCategories(initial: Category[] = []) {
-  const [categories, setCategories] = useState<Category[]>(initial);
+export default function useCategories() {
+  const [categories, setCategories] = useLocalStorage<Category[]>("categories", []);
 
   const addCategory = (name: string) => {
-    const newCategory: Category = { id: crypto.randomUUID(), name };
-    setCategories(prev => [...prev, newCategory]);
+    setCategories(prev => [...prev, { id: crypto.randomUUID(), name }]);
   };
-
   const updateCategory = (id: string, name: string) => {
-    setCategories(prev =>
-      prev.map(cat => (cat.id === id ? { ...cat, name } : cat)),
-    );
+    setCategories(prev => prev.map(category => (category.id === id ? { ...category, name } : category)));
   };
-
   const deleteCategory = (id: string) => {
-    setCategories(prev => prev.filter(cat => cat.id !== id));
+    setCategories(prev => prev.filter(category => category.id !== id));
   };
 
-  return { categories, addCategory, updateCategory, deleteCategory };
+  return { categories, setCategories, addCategory, updateCategory, deleteCategory };
 }

@@ -1,5 +1,4 @@
 import type {
-  BudgetData,
   Category,
   Income,
   Expense,
@@ -17,12 +16,12 @@ export function calculateTotalIncomeReceived(incomes: Income[]) {
   return total;
 }
 
-export function calculateCurrentBalance(data: BudgetData | null) {
-  if (data == null) return 0;
+export function calculateCurrentBankBalance(bankBalance: number, expenses: Expense[], incomes: Income[]) {
+  if (bankBalance == null) return 0;
 
-  const totalSpent = calculateTotalSpent(data.expenses);
-  const totalReceived = calculateTotalIncomeReceived(data.incomes);
-  const balance = data.startingBalance - totalSpent + totalReceived;
+  const totalSpent = calculateTotalSpent(expenses);
+  const totalReceived = calculateTotalIncomeReceived(incomes);
+  const balance = bankBalance - totalSpent + totalReceived;
   return balance;
 }
 
@@ -54,21 +53,23 @@ export function calculateBudgetedExpenses(budgetedExpenses: BudgetedExpense[]) {
   return total;
 }
 
-export function calculateAvailableToSpend(data: BudgetData | null) {
-  if (data == null) return 0;
-
-  const current = calculateCurrentBalance(data);
-  const comingIn = calculateProjectedIncome(data.projectedIncomes);
-  const goingOut = calculateBudgetedExpenses(data.budgetedExpenses);
+export function calculateAvailableToSpend(
+  incomes: Income[],
+  bankBalance: number,
+  expenses: Expense[],
+  projectedIncomes: ProjectedIncome[],
+  budgetedExpenses: BudgetedExpense[],
+) {
+  const current = calculateCurrentBankBalance(bankBalance, expenses, incomes);
+  const comingIn = calculateProjectedIncome(projectedIncomes);
+  const goingOut = calculateBudgetedExpenses(budgetedExpenses);
   const available = current + comingIn - goingOut;
   return available;
 }
 
-export function calculateTotalSpendPerCategory(data: BudgetData | null, category: Category) {
-  if (data == null) return 0;
-
+export function calculateTotalSpendPerCategory(expenses: Expense[], category: Category) {
   let total = 0;
-  data.expenses.forEach((expense) => {
+  expenses.forEach((expense) => {
     if (expense.categoryId === category.id) {
       total += expense.amount;
     }
@@ -77,13 +78,11 @@ export function calculateTotalSpendPerCategory(data: BudgetData | null, category
 }
 
 export function calculateTotalPastBudgetedExpensesPerCategory(
-  data: BudgetData | null,
+  budgetedExpenses: BudgetedExpense[],
   category: Category,
 ) {
-  if (data == null) return 0;
-
   let total = 0;
-  data.budgetedExpenses.forEach((budgetedExpense) => {
+  budgetedExpenses.forEach((budgetedExpense) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const expectedDate = new Date(budgetedExpense.date);
@@ -95,13 +94,11 @@ export function calculateTotalPastBudgetedExpensesPerCategory(
 }
 
 export function calculateFutureSpendPerCategoryPerMonth(
-  data: BudgetData | null,
+  budgetedExpenses: BudgetedExpense[],
   category: Category,
 ) {
-  if (data == null) return 0;
-
   let total = 0;
-  data.budgetedExpenses.forEach((budgetedExpense) => {
+  budgetedExpenses.forEach((budgetedExpense) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const endOfFinancialYear = new Date('2026-07-01');
